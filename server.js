@@ -15,7 +15,12 @@ const hbs = exphbs.create();
 
 const sess = {
   secret: process.env.SECRET,
-  cookie: {},
+  cookie: {
+    maxAge: 60 * 60 * 1000,
+    httpOnly: true,
+    secure: false,
+    sameSite: 'strict',
+  },
   resave: false,
   saveUninitialized: true,
   store: new SequelizeStore({
@@ -31,6 +36,12 @@ app.set('view engine', 'handlebars');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(function (req, res, next) {
+  const user_id = req.session.user_id;
+  res.locals.user_id = user_id;
+  next();
+});
+
 
 app.use(routes);
 

@@ -1,0 +1,9 @@
+<section class="new-post">
+    <button id="newPostBtn">New Post</button>
+</section>
+
+<section class="posts">
+{{#each user.posts as |post|}}
+    {{> post-details}}
+{{/each}}
+</section>

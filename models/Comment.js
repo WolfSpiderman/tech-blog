@@ -8,7 +8,7 @@ Comment.init(
     {
         id: {
             type: DataTypes.UUID,
-            defaultValue: uuid.v4(),
+            defaultValue: DataTypes.UUIDV4,
             allowNull: false,
             primaryKey: true,
         },
