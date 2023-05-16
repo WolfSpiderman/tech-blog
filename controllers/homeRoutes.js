@@ -103,7 +103,7 @@ router.get('/post/:id', async (req, res) => {
           where: { id: commentData.id },
           include: {
             model: User,
-            attributes: ['username']
+            attributes: ['id', 'username']
           }
         });
         

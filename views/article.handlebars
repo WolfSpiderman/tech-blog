@@ -15,13 +15,15 @@
 <br>
 {{/each}}
 
-<form id="add-comment-form" action="/api/comments" method="POST">
+<form id="add-comment-form">
   <button id="add-comment-button" type="button">Add Comment</button>
   <div id="new-comment-form" style="display: none;">
     <label for="comment-contents">Comment:</label><br>
+    <input type="hidden" name="user_id" value="{{user_id}}">
+    <input type="hidden" name="post_id" value="{{post.id}}">
     <textarea id="comment-contents" name="contents"></textarea><br>
     <button id="submit-comment-button" type="submit">Submit</button>
   </div>
 </form>
 
-<script link="../public/js/article.js"></script>
+<script src="/js/article.js"></script>
