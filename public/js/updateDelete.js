@@ -1,22 +1,19 @@
-// define variables for DOM elements we will need
-var editButton = document.querySelector('#edit-post-button');
-var deleteButton = document.querySelector('#delete-post-button');
-var articleTitle = document.querySelector('#postTitle');
-var articleContent = document.querySelector('p');
-var commentsSection = document.querySelector('#comments-section');
+const editButton = document.querySelector('#edit-post-button');
+const deleteButton = document.querySelector('#delete-post-button');
+const articleTitle = document.querySelector('#postTitle');
+const articleContent = document.querySelector('p');
+const commentsSection = document.querySelector('#comments-section');
 
-// add event listener to edit button
 editButton.addEventListener('click', function() {
-  // create input fields and populate with existing title/contents
-  var inputFields = `
-  <div id="input-fields">
-    <input class="articleTitleInput" type="text" name="title" value="${articleTitle.textContent}">
-    <textarea name="contents">${articleContent.textContent}</textarea>
-    <button id="save-button">Save</button>
-    <button id="cancel-button">Cancel</button>
-  </div>
+  const inputFields = `
+    <div id="input-fields">
+      <input class="articleTitleInput" type="text" name="title" value="${articleTitle.textContent}">
+      <textarea name="contents">${articleContent.textContent}</textarea>
+      <button id="save-button">Save</button>
+      <button id="cancel-button">Cancel</button>
+    </div>
   `;
-  const articleTitleInput = document.querySelector('#articleTitleInput');
+  const articleTitleInput = document.querySelector('.articleTitleInput');
   // hide article content and comments, show input fields
   articleTitle.style.display = 'none';
   articleContent.style.display = 'none';
@@ -24,14 +21,29 @@ editButton.addEventListener('click', function() {
   articleTitle.insertAdjacentHTML('afterend', inputFields);
 
   // add event listeners to save/cancel buttons
-  var saveButton = document.querySelector('#save-button');
-  var cancelButton = document.querySelector('#cancel-button');
-  
-  saveButton.addEventListener('click', function() {
-    // perform request to update post with new data
-    // then reload page to see updated content
+  const saveButton = document.querySelector('#save-button');
+  const cancelButton = document.querySelector('#cancel-button');
+
+  saveButton.addEventListener('click', async function() {
+    const newArticleTitle = articleTitleInput.value;
+    const newArticleContent = document.querySelector('textarea').value;
+    const postId = editButton.dataset.postId;
+
+    try {
+      await fetch(`/api/posts/${postId}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          title: newArticleTitle,
+          contents: newArticleContent
+        }),
+        headers: { 'Content-Type': 'application/json' }
+      });
+      location.reload();
+    } catch (error) {
+      console.error(error);
+    }
   });
-  
+
   cancelButton.addEventListener('click', function() {
     const inputFieldsDiv = cancelButton.closest('#input-fields');
     articleTitle.style.display = 'block';
@@ -42,7 +54,13 @@ editButton.addEventListener('click', function() {
 });
 
 // add event listener to delete button
-deleteButton.addEventListener('click', function() {
-  // perform request to delete post
-  // then redirect user to homepage (or some other appropriate location)
+deleteButton.addEventListener('click', async function() {
+  const postId = deleteButton.dataset.postId;
+
+  try {
+    await fetch(`/api/posts/${postId}`, { method: 'DELETE' });
+    window.location.href = '/';
+  } catch (error) {
+    console.error(error);
+  }
 });
