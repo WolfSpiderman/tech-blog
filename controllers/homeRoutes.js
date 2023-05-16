@@ -5,14 +5,20 @@ const withAuth = require('../utils/auth');
 router.get('/', async (req, res) => {
   try {
     const dbPostData = await Post.findAll({
-      attributes: ['id', 'name', 'contents', 'user_id', 'created_at'], 
-      include: [{ model: Comment }],
+      attributes: ['id', 'title', 'contents', 'user_id', 'created_at'], 
+      include: [{ model: Comment }, { model: User }],
     });
 
-    const posts = dbPostData.map((post) => post.get({ plain: true }));
+    // failed attempt at getting user on post too: try again later
+    // const posts = dbPostData.map((post) => {
+    //   const plainPost = post.get({ plain: true }); 
+    //   plainPost.userName = post.User.name;
+    //   return plainPost;
+    // });
 
+    const postData = dbPostData.map((post) => post.get({ plain: true }));
     res.render('homepage', {
-      posts,
+      posts: postData,
       logged_in: req.session.logged_in,
     });
   } catch (err) {
@@ -23,7 +29,6 @@ router.get('/', async (req, res) => {
 
 
 router.get('/login', (req, res) => {
-  // Check if user is already logged in and redirect to homepage
   if (req.session.logged_in) {
     res.redirect('/');
     return;
@@ -40,7 +45,7 @@ router.get('/dashboard/:id', withAuth, async (req, res) => {
         model: Post,
          attributes: [
           'id',
-          'name',
+          'title',
           'contents',
           'user_id',
           'created_at'
@@ -50,6 +55,9 @@ router.get('/dashboard/:id', withAuth, async (req, res) => {
     const user = dbUserData.get({ plain: true });
     
     // user.posts = dbUserData.posts.map((post) => post.get({ plain: true }));
+    user.posts.forEach(post => {
+      post.created_at_formatted = new Date(post.created_at).toLocaleDateString(); 
+    });
 
     res.render('dashboard', { user, logged_in: true, user_id: req.session.user_id });
   } catch (err) {

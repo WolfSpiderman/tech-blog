@@ -2,7 +2,13 @@ const { Model, DataTypes } = require('sequelize');
 const uuid = require('uuid4');
 const sequelize = require('../config/connection');
 
-class Post extends Model {}
+class Post extends Model {
+    postModel = {
+      formatDate: function() {
+        return this.created_at.toLocaleDateString();
+      }
+    };
+}
 
 Post.init(
     {
@@ -12,7 +18,7 @@ Post.init(
             allowNull: false,
             primaryKey: true,
         },
-        name: {
+        title: {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
