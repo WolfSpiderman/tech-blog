@@ -17,6 +17,10 @@ router.get('/', async (req, res) => {
     // });
 
     const postData = dbPostData.map((post) => post.get({ plain: true }));
+    postData.forEach(post => {
+      post.created_at_formatted = new Date(post.created_at).toLocaleDateString();
+    });
+
     res.render('homepage', {
       posts: postData,
       logged_in: req.session.logged_in,
@@ -59,12 +63,61 @@ router.get('/dashboard/:id', withAuth, async (req, res) => {
       post.created_at_formatted = new Date(post.created_at).toLocaleDateString(); 
     });
 
-    res.render('dashboard', { user, logged_in: true, user_id: req.session.user_id });
+    res.render('dashboard', { user, logged_in: req.session.logged_in, user_id: req.session.user_id });
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
   }
 });
 
+router.get('/post/:id', async (req, res) => {
+  try {
+    const postData = await Post.findOne({
+      where: { id: req.params.id },
+      include: [
+        {
+          model: User, 
+          attributes: ['id', 'username']
+        },
+        {
+          model: Comment,
+          attributes: ['id', 'contents', 'user_id', 'created_at'],
+          include: {
+            model: User,
+            attributes: ['id', 'username']
+          }
+        }
+      ]
+    });
+    
+    const post = postData.get({ plain: true });
+    
+    post.created_at_formatted = new Date(post.createdAt).toLocaleDateString();
+    
+    post.comments = post.comments || [];
+    
+    if (Array.isArray(post.comments)) {
+      for (let i = 0; i < post.comments.length; i++) {
+        const commentData = post.comments[i];
+        const comment = await Comment.findOne({
+          where: { id: commentData.id },
+          include: {
+            model: User,
+            attributes: ['username']
+          }
+        });
+        
+        post.comments[i] = comment.get({ plain: true });
+        post.comments[i].user.username = comment.user.username;
+        post.comments[i].created_at_formatted = new Date(post.comments[i].createdAt).toLocaleDateString();
+      }
+    }
+    
+    res.render('article', { post, logged_in: req.session.logged_in });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
 
 module.exports = router;

@@ -1,7 +1,18 @@
 [
     {
+        "id": "1",
         "title": "Nimrod",
         "contents": "Nimrod is a god the size of a galaxy with the body of a sasquatch and the head of a chupacabra.",
         "user_id": "5"
+    },
+    {
+        "title": "Lucifina",
+        "contents": "Lucifina is the goddess of the Suckverse, and stands for many things, a few of which are female empowerment and badassitude, beauty, and punishment of the wicked.",
+        "user_id": "2"
+    },
+    {
+        "title": "Triple M",
+        "contents": "Micheal Motherfuckin' McDonald is the bard of the Suck, and his voice could tame the fiercest dragon.",
+        "user_id": "3"
     }
 ]

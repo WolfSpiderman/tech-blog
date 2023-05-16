@@ -1,0 +1,27 @@
+<h1>{{post.title}}</h1>
+<p>{{post.contents}}</p>
+
+<div>
+  <small>Posted by: {{post.user.username}} at {{post.created_at_formatted}}</small>
+</div>
+
+<hr>
+
+{{#each post.comments}}
+<div>
+  <p>{{this.contents}}</p>
+  <small>Comment by: {{this.user.username}} at {{this.created_at_formatted}}</small>
+</div>
+<br>
+{{/each}}
+
+<form id="add-comment-form" action="/api/comments" method="POST">
+  <button id="add-comment-button" type="button">Add Comment</button>
+  <div id="new-comment-form" style="display: none;">
+    <label for="comment-contents">Comment:</label><br>
+    <textarea id="comment-contents" name="contents"></textarea><br>
+    <button id="submit-comment-button" type="submit">Submit</button>
+  </div>
+</form>
+
+<script link="../public/js/article.js"></script>
