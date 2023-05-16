@@ -1,5 +1,12 @@
-<h1>{{post.title}}</h1>
+<h1 id="postTitle">{{post.title}}</h1>
 <p>{{post.contents}}</p>
+
+{{#if (eq post.user.id user_id)}}
+<div>
+  <button id="edit-post-button">Edit Post</button>
+  <button id="delete-post-button">Delete Post</button>
+</div>
+{{/if}}
 
 <div>
   <small>Posted by: {{post.user.username}} at {{post.created_at_formatted}}</small>
@@ -15,6 +22,7 @@
 <br>
 {{/each}}
 
+<section id="comments-section">
 <form id="add-comment-form">
   <button id="add-comment-button" type="button">Add Comment</button>
   <div id="new-comment-form" style="display: none;">
@@ -25,5 +33,7 @@
     <button id="submit-comment-button" type="submit">Submit</button>
   </div>
 </form>
+</section>
 
 <script src="/js/article.js"></script>
+<script src="/js/updateDelete.js"></script>

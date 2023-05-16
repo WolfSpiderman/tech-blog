@@ -11,6 +11,11 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+const handlebars = require('handlebars');
+handlebars.registerHelper('eq', function (a, b) {
+  return a === b;
+});
+
 const hbs = exphbs.create();
 
 const sess = {
