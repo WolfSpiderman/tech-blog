@@ -25,12 +25,14 @@ editButton.addEventListener('click', function() {
   const cancelButton = document.querySelector('#cancel-button');
 
   saveButton.addEventListener('click', async function() {
-    const newArticleTitle = articleTitleInput.value;
+    const newArticleTitle = document.querySelector('.articleTitleInput').value;
     const newArticleContent = document.querySelector('textarea').value;
-    const postId = editButton.dataset.postId;
+    const postIdInput = document.querySelector('input[name="post_id"]');
+    const post_id = postIdInput.value;
+    console.log(post_id);
 
     try {
-      await fetch(`/api/posts/${postId}`, {
+      await fetch(`/api/posts/${post_id}`, {
         method: 'PUT',
         body: JSON.stringify({
           title: newArticleTitle,
@@ -55,11 +57,14 @@ editButton.addEventListener('click', function() {
 
 // add event listener to delete button
 deleteButton.addEventListener('click', async function() {
-  const postId = deleteButton.dataset.postId;
+    const userIdInput = document.querySelector('input[name="user_id"]');
+    const postIdInput = document.querySelector('input[name="post_id"]');
+    const user_id = userIdInput.value;
+    const post_id = postIdInput.value;
 
   try {
-    await fetch(`/api/posts/${postId}`, { method: 'DELETE' });
-    window.location.href = '/';
+    await fetch(`/api/posts/${post_id}`, { method: 'DELETE' });
+    window.location.href = `/dashboard/${user_id}`;
   } catch (error) {
     console.error(error);
   }
