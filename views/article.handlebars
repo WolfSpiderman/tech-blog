@@ -1,3 +1,4 @@
+<div class="card">
 <h1 id="postTitle">{{post.title}}</h1>
 <p>{{post.contents}}</p>
 
@@ -15,7 +16,7 @@
 <hr>
 
 {{#each post.comments}}
-<div>
+<div class="card">
   <p>{{this.contents}}</p>
   <small>Comment by: {{this.user.username}} at {{this.created_at_formatted}}</small>
 </div>
@@ -39,3 +40,4 @@
 {{#if (eq post.user.id user_id)}}
 <script src="/js/updateDelete.js"></script>
 {{/if}}
+</div>
